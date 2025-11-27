@@ -1,9 +1,11 @@
 """
-Script to seed the database with popular movies
+Script to seed the database with popular movies and admin user
 Run this after init_db.py to populate sample data
 """
 from app.db.session import SessionLocal
 from app.models.movie import Movie
+from app.models.user import User
+from app.core.security import get_password_hash
 
 def seed_movies():
     db = SessionLocal()
@@ -127,5 +129,33 @@ def seed_movies():
     print(f"✅ Successfully seeded {len(movies_data)} movies!")
     db.close()
 
+def seed_admin_user():
+    """Create an admin user if it doesn't exist"""
+    db = SessionLocal()
+    
+    # Check if admin user already exists
+    existing_admin = db.query(User).filter(User.username == "admin").first()
+    
+    if existing_admin:
+        print("⚠️  Admin user already exists. Skipping.")
+        db.close()
+        return
+    
+    # Create admin user
+    admin_user = User(
+        username="admin",
+        email="admin@cineverse.fr",
+        full_name="Administrator",
+        hashed_password=get_password_hash("adminpassword123"),
+        is_active=True,
+        is_admin=True
+    )
+    
+    db.add(admin_user)
+    db.commit()
+    print("✅ Admin user created! (username: admin, password: adminpassword123)")
+    db.close()
+
 if __name__ == "__main__":
     seed_movies()
+    seed_admin_user()

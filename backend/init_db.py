@@ -23,8 +23,8 @@ if not existing_tables:
         connection.execute(text("ALTER SEQUENCE watchlists_id_seq RESTART WITH 1"))
         connection.commit()
     
-    print("✅ Database tables created successfully!")
-    print("✅ Sequences reset to 1")
+    print("Database tables created successfully!")
+    print("Sequences reset to 1")
 else:
-    print("✅ Database tables already exist - skipping creation")
+    print("Database tables already exist - skipping creation")
 
