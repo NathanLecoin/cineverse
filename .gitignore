@@ -50,6 +50,7 @@ out/
 .project
 .classpath
 .settings/
+docs/
 
 # OS
 Thumbs.db
@@ -68,9 +69,6 @@ logs/
 # Documentation build
 docs/_build/
 site/
-
-# Alembic
-# alembic/versions/*.pyc
 
 # Testing
 .tox/
