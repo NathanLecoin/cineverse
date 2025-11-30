@@ -16,7 +16,7 @@ class WatchlistWithMovie(BaseModel):
     id: int
     user_id: int
     movie_id: int
-    movie: dict  # Informations du film
+    movie: dict  
     
     class Config:
         from_attributes = True

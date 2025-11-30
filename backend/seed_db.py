@@ -113,11 +113,10 @@ def seed_movies():
         }
     ]
     
-    # Vérifier si les films existent déjà
     existing_count = db.query(Movie).count()
     
     if existing_count > 0:
-        print(f"⚠️  Database already contains {existing_count} movies. Skipping seed.")
+        print(f"Database already contains {existing_count} movies. Skipping seed.")
         db.close()
         return
     
@@ -126,7 +125,7 @@ def seed_movies():
         db.add(movie)
     
     db.commit()
-    print(f"✅ Successfully seeded {len(movies_data)} movies!")
+    print(f"Successfully seeded {len(movies_data)} movies!")
     db.close()
 
 def seed_admin_user():
@@ -137,7 +136,7 @@ def seed_admin_user():
     existing_admin = db.query(User).filter(User.username == "admin").first()
     
     if existing_admin:
-        print("⚠️  Admin user already exists. Skipping.")
+        print("Admin user already exists. Skipping.")
         db.close()
         return
     
@@ -153,7 +152,7 @@ def seed_admin_user():
     
     db.add(admin_user)
     db.commit()
-    print("✅ Admin user created! (username: admin, password: adminpassword123)")
+    print("Admin user created! (username: admin, password: adminpassword123)")
     db.close()
 
 if __name__ == "__main__":

@@ -15,5 +15,4 @@ python seed_db.py
 echo "Database initialization complete!"
 echo "🚀 Starting API server..."
 
-# Start the API server
 exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

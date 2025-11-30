@@ -27,4 +27,3 @@ if not existing_tables:
     print("Sequences reset to 1")
 else:
     print("Database tables already exist - skipping creation")
-
