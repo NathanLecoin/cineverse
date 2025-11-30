@@ -5,6 +5,7 @@
 [![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green.svg)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
+[![Tests](https://img.shields.io/badge/tests-20%20passed-brightgreen.svg)](https://github.com/NathanLecoin/cineverse/actions)
 
 > Une plateforme moderne de critique de films développée avec React + FastAPI + PostgreSQL
 
@@ -169,28 +170,29 @@ cineverse/
 
 ## 🧪 Tests
 
-### Backend (pytest)
+### Backend (20 tests : 10 unitaires + 10 intégration)
+
 ```bash
+# Tests unitaires uniquement (pour CI/CD)
+docker compose exec api pytest tests/unit/test_unit.py -v
+
+# Tests d'intégration (local seulement)
+docker compose exec api pytest tests/test_integration.py -v
+
 # Tous les tests
-docker compose exec backend pytest
+docker compose exec api pytest tests/unit/test_unit.py tests/test_integration.py -v
 
-# Avec coverage
-docker compose exec backend pytest --cov=app --cov-report=html
-
-# Tests spécifiques
-docker compose exec backend pytest tests/test_auth.py -v
+# Avec couverture
+docker compose exec api pytest tests/unit/test_unit.py --cov=app --cov-report=term-missing
 ```
 
+**Note** : Le CI/CD (GitHub Actions) exécute automatiquement les **10 tests unitaires** à chaque push. Les tests d'intégration sont pour validation locale uniquement.
+
 ### Frontend (vitest)
+
 ```bash
-# Tous les tests
+# Tests frontend (si configurés)
 docker compose exec frontend npm test
-
-# En mode watch
-docker compose exec frontend npm run test:watch
-
-# Coverage
-docker compose exec frontend npm run test:coverage
 ```
 
 ## 📊 Données d'exemple
