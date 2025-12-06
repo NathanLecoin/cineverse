@@ -1,10 +1,12 @@
 """
-Script to seed the database with popular movies and admin user
+Script to seed the database with popular movies, users, reviews and watchlists
 Run this after init_db.py to populate sample data
 """
 from app.db.session import SessionLocal
 from app.models.movie import Movie
 from app.models.user import User
+from app.models.review import Review
+from app.models.watchlist import Watchlist
 from app.core.security import get_password_hash
 
 def seed_movies():
@@ -110,6 +112,56 @@ def seed_movies():
             "title": "Joker",
             "description": "Un comédien de seconde classe en crise mentale et en marginalisation sociale crée un personnage de tueur en série.",
             "release_year": 2019
+        },
+        {
+            "title": "Blade Runner 2049",
+            "description": "Un jeune blade runner découvre un secret longtemps enterré qui a le potentiel de plonger ce qui reste de la société dans le chaos.",
+            "release_year": 2017
+        },
+        {
+            "title": "The Lord of the Rings: The Fellowship of the Ring",
+            "description": "Un hobbit modeste de la Comté et huit compagnons entreprennent un voyage pour détruire le puissant Anneau Unique.",
+            "release_year": 2001
+        },
+        {
+            "title": "Spider-Man: Into the Spider-Verse",
+            "description": "Miles Morales devient Spider-Man et rejoint d'autres Spider-People de différentes dimensions.",
+            "release_year": 2018
+        },
+        {
+            "title": "Whiplash",
+            "description": "Un jeune batteur ambitieux de jazz fait face à un professeur abusif dans une prestigieuse école de musique.",
+            "release_year": 2014
+        },
+        {
+            "title": "La La Land",
+            "description": "Une actrice en herbe et un musicien de jazz passionné tombent amoureux tout en poursuivant leurs rêves à Los Angeles.",
+            "release_year": 2016
+        },
+        {
+            "title": "Mad Max: Fury Road",
+            "description": "Dans un monde post-apocalyptique, Max s'associe à Furiosa pour échapper à un culte tyrannique.",
+            "release_year": 2015
+        },
+        {
+            "title": "Get Out",
+            "description": "Un jeune homme afro-américain rend visite à la famille de sa petite amie blanche et découvre un secret terrifiant.",
+            "release_year": 2017
+        },
+        {
+            "title": "The Grand Budapest Hotel",
+            "description": "Les aventures de Gustave H, un concierge légendaire dans un hôtel européen célèbre.",
+            "release_year": 2014
+        },
+        {
+            "title": "Coco",
+            "description": "Un jeune garçon aspirant musicien se retrouve dans le Pays des Morts et cherche l'aide de son arrière-arrière-grand-père.",
+            "release_year": 2017
+        },
+        {
+            "title": "1917",
+            "description": "Deux jeunes soldats britanniques doivent traverser le territoire ennemi pour délivrer un message vital.",
+            "release_year": 2019
         }
     ]
     
@@ -155,6 +207,158 @@ def seed_admin_user():
     print("Admin user created! (username: admin, password: adminpassword123)")
     db.close()
 
+
+def seed_users():
+    """Create Alice and Bob users for demo"""
+    db = SessionLocal()
+    
+    # Check if users exist
+    alice_exists = db.query(User).filter(User.username == "alice").first()
+    bob_exists = db.query(User).filter(User.username == "bob").first()
+    
+    users_created = 0
+    
+    if not alice_exists:
+        alice = User(
+            username="alice",
+            email="alice@cineverse.fr",
+            full_name="Alice Dupont",
+            hashed_password=get_password_hash("alice123"),
+            is_active=True,
+            is_admin=False
+        )
+        db.add(alice)
+        users_created += 1
+    
+    if not bob_exists:
+        bob = User(
+            username="bob",
+            email="bob@cineverse.fr",
+            full_name="Bob Martin",
+            hashed_password=get_password_hash("bob123"),
+            is_active=True,
+            is_admin=False
+        )
+        db.add(bob)
+        users_created += 1
+    
+    if users_created > 0:
+        db.commit()
+        print(f"Successfully created {users_created} users (Alice and Bob)!")
+    else:
+        print("Users Alice and Bob already exist. Skipping.")
+    
+    db.close()
+
+
+def seed_reviews():
+    """Create reviews by Alice and Bob"""
+    db = SessionLocal()
+    
+    alice = db.query(User).filter(User.username == "alice").first()
+    bob = db.query(User).filter(User.username == "bob").first()
+    
+    if not alice or not bob:
+        print("Warning: Alice or Bob user not found. Cannot seed reviews.")
+        db.close()
+        return
+    
+    reviews_data = [
+        # Alice's reviews
+        {"user_id": alice.id, "movie_id": 1, "rating": 5, "comment": "Chef-d'œuvre absolu ! Inception m'a complètement bluffée. La complexité des niveaux de rêves est fascinante."},
+        {"user_id": alice.id, "movie_id": 2, "rating": 5, "comment": "Matrix a révolutionné le cinéma de science-fiction. Une philosophie profonde cachée dans un film d'action."},
+        {"user_id": alice.id, "movie_id": 3, "rating": 4, "comment": "Interstellar est visuellement magnifique mais un peu long. Les scènes spatiales sont incroyables."},
+        {"user_id": alice.id, "movie_id": 8, "rating": 5, "comment": "Le Parrain reste le meilleur film de tous les temps. Un chef-d'œuvre du cinéma."},
+        {"user_id": alice.id, "movie_id": 12, "rating": 4, "comment": "Oppenheimer est intense et historiquement fascinant. Nolan au sommet de son art."},
+        {"user_id": alice.id, "movie_id": 16, "rating": 5, "comment": "Parasite est une critique sociale brillante. Un film coréen qui mérite tous ses Oscars."},
+        {"user_id": alice.id, "movie_id": 25, "rating": 4, "comment": "La La Land est un hommage magnifique aux comédies musicales classiques avec une fin mélancolique."},
+        
+        # Bob's reviews
+        {"user_id": bob.id, "movie_id": 4, "rating": 5, "comment": "Heath Ledger est incroyable en Joker ! Une performance inoubliable qui transcende le film de super-héros."},
+        {"user_id": bob.id, "movie_id": 5, "rating": 4, "comment": "Pulp Fiction est culte, mais pas pour tout le monde. Tarantino à son meilleur."},
+        {"user_id": bob.id, "movie_id": 6, "rating": 5, "comment": "Un film qui donne espoir, j'ai adoré. Morgan Freeman et Tim Robbins sont parfaits."},
+        {"user_id": bob.id, "movie_id": 10, "rating": 3, "comment": "Avengers c'est fun mais un peu trop de CGI à mon goût. Divertissant mais prévisible."},
+        {"user_id": bob.id, "movie_id": 15, "rating": 5, "comment": "Fight Club est un film qui fait réfléchir sur la société moderne. Le twist final est légendaire."},
+        {"user_id": bob.id, "movie_id": 20, "rating": 4, "comment": "Joaquin Phoenix est troublant dans ce rôle. Une vision sombre et réaliste du personnage."},
+        {"user_id": bob.id, "movie_id": 26, "rating": 5, "comment": "Mad Max Fury Road est une symphonie visuelle. Action pure du début à la fin!"},
+    ]
+    
+    reviews_created = 0
+    
+    for review_data in reviews_data:
+        existing = db.query(Review).filter(
+            Review.user_id == review_data["user_id"],
+            Review.movie_id == review_data["movie_id"]
+        ).first()
+        
+        if not existing:
+            review = Review(**review_data)
+            db.add(review)
+            reviews_created += 1
+    
+    if reviews_created > 0:
+        db.commit()
+        print(f"Successfully seeded {reviews_created} reviews!")
+    else:
+        print("Reviews already exist. Skipping.")
+    
+    db.close()
+
+
+def seed_watchlists():
+    """Create watchlist entries for Alice and Bob"""
+    db = SessionLocal()
+    
+    alice = db.query(User).filter(User.username == "alice").first()
+    bob = db.query(User).filter(User.username == "bob").first()
+    
+    if not alice or not bob:
+        print("Warning: Alice or Bob user not found. Cannot seed watchlists.")
+        db.close()
+        return
+    
+    watchlist_data = [
+        # Alice's watchlist - films she wants to watch
+        {"user_id": alice.id, "movie_id": 7},   # Forrest Gump
+        {"user_id": alice.id, "movie_id": 11},  # Avatar
+        {"user_id": alice.id, "movie_id": 14},  # Dune
+        {"user_id": alice.id, "movie_id": 22},  # The Lord of the Rings
+        {"user_id": alice.id, "movie_id": 28},  # The Grand Budapest Hotel
+        
+        # Bob's watchlist - films he wants to watch
+        {"user_id": bob.id, "movie_id": 9},    # Titanic
+        {"user_id": bob.id, "movie_id": 13},   # Lion King
+        {"user_id": bob.id, "movie_id": 17},   # Silence of the Lambs
+        {"user_id": bob.id, "movie_id": 18},   # Gladiator
+        {"user_id": bob.id, "movie_id": 23},   # Spider-Man: Into the Spider-Verse
+        {"user_id": bob.id, "movie_id": 29},   # Coco
+    ]
+    
+    watchlist_created = 0
+    
+    for wl_data in watchlist_data:
+        existing = db.query(Watchlist).filter(
+            Watchlist.user_id == wl_data["user_id"],
+            Watchlist.movie_id == wl_data["movie_id"]
+        ).first()
+        
+        if not existing:
+            watchlist = Watchlist(**wl_data)
+            db.add(watchlist)
+            watchlist_created += 1
+    
+    if watchlist_created > 0:
+        db.commit()
+        print(f"Successfully seeded {watchlist_created} watchlist entries!")
+    else:
+        print("Watchlist entries already exist. Skipping.")
+    
+    db.close()
+
+
 if __name__ == "__main__":
     seed_movies()
     seed_admin_user()
+    seed_users()
+    seed_reviews()
+    seed_watchlists()
