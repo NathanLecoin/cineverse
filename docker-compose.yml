@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile
     container_name: cineverse_frontend
     ports:
-      - "80:80"
+      - "5173:80"
     depends_on:
       api:
         condition: service_healthy

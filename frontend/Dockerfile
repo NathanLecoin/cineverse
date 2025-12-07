@@ -12,6 +12,10 @@ RUN npm install
 # Copier le reste du code
 COPY . .
 
+# Définir la variable d'environnement pour le build
+ARG VITE_API_URL=http://localhost:8000/api/v1
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build de production
 RUN npm run build
 
