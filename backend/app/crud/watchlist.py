@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.watchlist import Watchlist
 from app.schemas.watchlist import WatchlistCreate
 
@@ -21,8 +21,11 @@ def add_to_watchlist(db: Session, watchlist: WatchlistCreate):
 def get_watchlist(db: Session, watchlist_id: int):
     return db.query(Watchlist).filter(Watchlist.id == watchlist_id).first()
 
-def get_user_watchlist(db: Session, user_id: int, skip: int = 0, limit: int = 10):
-    return db.query(Watchlist).filter(Watchlist.user_id == user_id).offset(skip).limit(limit).all()
+def get_user_watchlist(db: Session, user_id: int):
+    return db.query(Watchlist)\
+        .options(joinedload(Watchlist.movie))\
+        .filter(Watchlist.user_id == user_id)\
+        .all()
 
 def remove_from_watchlist(db: Session, user_id: int, movie_id: int):
     db_watchlist = db.query(Watchlist).filter(

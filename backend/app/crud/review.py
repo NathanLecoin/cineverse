@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.review import Review
 from app.schemas.review import ReviewCreate, ReviewUpdate
 
@@ -16,7 +16,12 @@ def get_reviews(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Review).offset(skip).limit(limit).all()
 
 def get_reviews_by_movie(db: Session, movie_id: int, skip: int = 0, limit: int = 10):
-    return db.query(Review).filter(Review.movie_id == movie_id).offset(skip).limit(limit).all()
+    return db.query(Review)\
+        .options(joinedload(Review.user))\
+        .filter(Review.movie_id == movie_id)\
+        .offset(skip)\
+        .limit(limit)\
+        .all()
 
 def get_reviews_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 10):
     return db.query(Review).filter(Review.user_id == user_id).offset(skip).limit(limit).all()

@@ -8,7 +8,7 @@ from app.crud.watchlist import add_to_watchlist, get_user_watchlist, remove_from
 from app.crud.user import create_user, get_user, get_user_by_username, get_user_by_email, get_users, update_user, delete_user
 from app.schemas.movie import MovieCreate, MovieUpdate, MovieResponse
 from app.schemas.review import ReviewCreate, ReviewUpdate, ReviewResponse
-from app.schemas.watchlist import WatchlistCreate, WatchlistResponse
+from app.schemas.watchlist import WatchlistCreate, WatchlistResponse, WatchlistWithMovie
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
 from app.api.v1 import auth
 from app.api.v1.auth import get_current_user, get_current_active_admin
@@ -236,7 +236,7 @@ async def add_movie_to_watchlist(
         raise HTTPException(status_code=403, detail="You can only add movies to your own watchlist")
     return add_to_watchlist(db, watchlist)
 
-@api_router.get("/watchlist/{user_id}", response_model=list[WatchlistResponse])
+@api_router.get("/watchlist/{user_id}", response_model=list[WatchlistWithMovie])
 async def get_watchlist(
     user_id: int,
     current_user: Annotated[User, Depends(get_current_user)],
