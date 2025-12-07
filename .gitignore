@@ -13,11 +13,14 @@ ENV/
 .eggs/
 *.egg
 
-# Environment variables
-.env
+# Environment variables (sauf backend/.env et frontend/.env pour le prof)
+# .env
 .env.local
 .env.docker
 *.env.backup
+
+# Documentation (ne pas versionner)
+docs/
 
 # Database
 *.db
